@@ -1,9 +1,6 @@
 import { SVGProps } from "react";
 
-export function SearchIcon({
-  strokeWidth = 1,
-  ...props
-}: SVGProps<SVGSVGElement>) {
+export function SearchIcon({ strokeWidth = 1, ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 20 20"

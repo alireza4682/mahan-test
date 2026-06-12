@@ -16,6 +16,12 @@ export type Blog = {
   created_datetime: string;
 };
 
+export type CreateBlogInput = {
+  category: number;
+  title: string;
+  content: string;
+};
+
 export type BlogsApiResponse = {
   count: number;
   next: string | null;
@@ -34,6 +40,6 @@ export type BlogsPage = {
 export type BlogsFilters = {
   category?: number;
   page: number;
-  pageSize: 10 | 15;
+  pageSize: 11 | 16;
   search?: string;
 };

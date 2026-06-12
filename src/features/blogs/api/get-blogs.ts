@@ -8,14 +8,10 @@ type GetBlogsOptions = {
   signal?: AbortSignal;
 };
 
-export async function getBlogs({
-  filters,
-  signal,
-}: GetBlogsOptions): Promise<BlogsPage> {
+export async function getBlogs({ filters, signal }: GetBlogsOptions): Promise<BlogsPage> {
   const offset = (filters.page - 1) * filters.pageSize;
   const firstApiPage = Math.floor(offset / API_PAGE_SIZE) + 1;
-  const lastApiPage =
-    Math.floor((offset + filters.pageSize - 1) / API_PAGE_SIZE) + 1;
+  const lastApiPage = Math.floor((offset + filters.pageSize - 1) / API_PAGE_SIZE) + 1;
 
   const firstResponse = await fetchApiPage(firstApiPage, filters, signal);
   const responses = [firstResponse];

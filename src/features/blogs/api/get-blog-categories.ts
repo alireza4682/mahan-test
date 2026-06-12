@@ -1,11 +1,8 @@
 import type { BlogCategoryWithCount } from "../types";
 
-const BLOG_CATEGORIES_ENDPOINT =
-  "https://test.bajetala.com/blog/blog-categories/";
+const BLOG_CATEGORIES_ENDPOINT = "https://test.bajetala.com/blog/blog-categories/";
 
-export async function getBlogCategories(
-  signal?: AbortSignal,
-): Promise<BlogCategoryWithCount[]> {
+export async function getBlogCategories(signal?: AbortSignal): Promise<BlogCategoryWithCount[]> {
   const response = await fetch(BLOG_CATEGORIES_ENDPOINT, {
     cache: "no-store",
     headers: {

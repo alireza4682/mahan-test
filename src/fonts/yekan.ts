@@ -44,6 +44,7 @@ const Yekan = localFont({
     },
   ],
   display: "swap",
+  preload: false,
   variable: "--font-yekan",
 });
 

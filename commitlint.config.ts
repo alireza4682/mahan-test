@@ -1,8 +1,4 @@
-import {
-  RuleConfigCondition,
-  RuleConfigSeverity,
-  TargetCaseType,
-} from "@commitlint/types";
+import { RuleConfigCondition, RuleConfigSeverity, TargetCaseType } from "@commitlint/types";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
@@ -11,11 +7,7 @@ export default {
     "body-leading-blank": [RuleConfigSeverity.Warning, "always"] as const,
     "body-max-line-length": [RuleConfigSeverity.Error, "always", 100] as const,
     "footer-leading-blank": [RuleConfigSeverity.Warning, "always"] as const,
-    "footer-max-line-length": [
-      RuleConfigSeverity.Error,
-      "always",
-      100,
-    ] as const,
+    "footer-max-line-length": [RuleConfigSeverity.Error, "always", 100] as const,
     "header-max-length": [RuleConfigSeverity.Error, "always", 100] as const,
     "header-trim": [RuleConfigSeverity.Error, "always"] as const,
     "subject-case": [
@@ -72,8 +64,7 @@ export default {
             emoji: "💎",
           },
           refactor: {
-            description:
-              "A code change that neither fixes a bug nor adds a feature",
+            description: "A code change that neither fixes a bug nor adds a feature",
             title: "Code Refactoring",
             emoji: "📦",
           },
@@ -112,12 +103,10 @@ export default {
         },
       },
       scope: {
-        description:
-          "What is the scope of this change (e.g. component or file name)",
+        description: "What is the scope of this change (e.g. component or file name)",
       },
       subject: {
-        description:
-          "Write a short, imperative tense description of the change",
+        description: "Write a short, imperative tense description of the change",
       },
       body: {
         description: "Provide a longer description of the change",

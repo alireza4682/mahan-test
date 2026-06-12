@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body
-        className={`${Yekan.variable} ${Yekan.className} antialiased flex flex-col items-center relative`}
+        className={`${Yekan.variable} ${Yekan.className} relative flex flex-col items-center antialiased`}
       >
         <Providers>{children}</Providers>
       </body>

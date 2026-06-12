@@ -1,14 +1,8 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 import { BlogsView } from "@/features/blogs/components/blogs-view";
-import {
-  type BlogSearchParams,
-  parseBlogsUrlFilters,
-} from "@/features/blogs/search-params";
-import {
-  blogCategoriesQueryOptions,
-  blogsQueryOptions,
-} from "@/features/blogs/queries";
+import { type BlogSearchParams, parseBlogsUrlFilters } from "@/features/blogs/search-params";
+import { blogCategoriesQueryOptions, blogsQueryOptions } from "@/features/blogs/queries";
 import { getQueryClient } from "@/lib/react-query/get-query-client";
 
 type BlogPageProps = {
@@ -20,12 +14,8 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const queryClient = getQueryClient();
 
   await Promise.all([
-    queryClient.prefetchQuery(
-      blogsQueryOptions({ ...filters, pageSize: 10 }),
-    ),
-    queryClient.prefetchQuery(
-      blogsQueryOptions({ ...filters, pageSize: 15 }),
-    ),
+    queryClient.prefetchQuery(blogsQueryOptions({ ...filters, pageSize: 11 })),
+    queryClient.prefetchQuery(blogsQueryOptions({ ...filters, pageSize: 16 })),
     queryClient.prefetchQuery(blogCategoriesQueryOptions()),
   ]);
 

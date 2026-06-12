@@ -1,9 +1,6 @@
 import type { BlogsFilters } from "./types";
 
-export type BlogSearchParams = Record<
-  string,
-  string | string[] | undefined
->;
+export type BlogSearchParams = Record<string, string | string[] | undefined>;
 
 export type BlogsUrlFilters = Omit<BlogsFilters, "pageSize">;
 
@@ -18,14 +15,10 @@ function parsePositiveInteger(value: string | undefined) {
 
   const parsedValue = Number(value);
 
-  return Number.isInteger(parsedValue) && parsedValue > 0
-    ? parsedValue
-    : undefined;
+  return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : undefined;
 }
 
-export function parseBlogsUrlFilters(
-  searchParams: BlogSearchParams,
-): BlogsUrlFilters {
+export function parseBlogsUrlFilters(searchParams: BlogSearchParams): BlogsUrlFilters {
   const search = firstValue(searchParams.search)?.trim();
 
   return {

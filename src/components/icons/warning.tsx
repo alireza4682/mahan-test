@@ -1,9 +1,6 @@
 import { SVGProps } from "react";
 
-export function WarningIcon({
-  strokeWidth = 1,
-  ...props
-}: SVGProps<SVGSVGElement>) {
+export function WarningIcon({ strokeWidth = 1, ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 16 16"
@@ -18,12 +15,7 @@ export function WarningIcon({
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path
-        d="M8 6V9"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <path d="M8 6V9" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
       <path
         d="M8 11.3281V11.3348"
         stroke="currentColor"

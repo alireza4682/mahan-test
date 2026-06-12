@@ -14,6 +14,7 @@ type BlogCardProps = {
   author?: string;
   tag?: string;
   href?: string;
+  eager?: boolean;
 };
 
 const BlogCard: React.FC<BlogCardProps> = ({
@@ -23,6 +24,7 @@ const BlogCard: React.FC<BlogCardProps> = ({
   author = "تیم تولید محتوا",
   tag,
   href = "#",
+  eager = false,
 }) => {
   return (
     <Card className="group/blog-card relative h-66 w-40 gap-0 overflow-visible py-0 transition-transform duration-500 ease-out before:pointer-events-none before:absolute before:inset-x-3 before:-top-1 before:-z-10 before:h-8 before:rounded-full before:bg-secondary/0 before:blur-xl before:transition-colors before:duration-500 md:h-84 md:w-full md:max-w-75.5 md:hover:-translate-y-1 md:hover:before:bg-secondary/20">
@@ -33,10 +35,11 @@ const BlogCard: React.FC<BlogCardProps> = ({
               <Image
                 src={image}
                 alt={title}
-                width={278}
-                height={180}
+                fill
+                sizes="(min-width: 1280px) 302px, (min-width: 768px) 50vw, 144px"
+                loading={eager ? "eager" : "lazy"}
                 unoptimized
-                className="h-full w-full object-cover transition-transform duration-500 ease-out md:group-hover/blog-card:scale-110"
+                className="object-cover transition-transform duration-500 ease-out md:group-hover/blog-card:scale-110"
               />
 
               {tag && (
@@ -61,22 +64,22 @@ const BlogCard: React.FC<BlogCardProps> = ({
         {(date || author) && (
           <div className="space-y-1">
             {date && (
-              <div className="flex items-center gap-2">
+              <div className="flex min-h-5 items-center gap-2">
                 <ClockIcon
-                  className="size-4 shrink-0 text-secondary md:size-5"
+                  className="size-4 shrink-0 translate-y-px text-secondary md:size-5"
                   strokeWidth={1}
                 />
-                <span className="text-text-secondary text-xs">{date}</span>
+                <span className="text-xs leading-5 text-text-secondary">{date}</span>
               </div>
             )}
 
             {author && (
-              <div className="flex items-center gap-2">
+              <div className="flex min-h-5 items-center gap-2">
                 <UserIcon
-                  className="size-4 shrink-0 text-secondary md:size-5"
+                  className="size-4 shrink-0 translate-y-px text-secondary md:size-5"
                   strokeWidth={1}
                 />
-                <span className="text-text-secondary text-xs">{author}</span>
+                <span className="text-xs leading-5 text-text-secondary">{author}</span>
               </div>
             )}
           </div>

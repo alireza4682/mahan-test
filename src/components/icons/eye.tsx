@@ -1,9 +1,6 @@
 import { SVGProps } from "react";
 
-export function EyeIcon({
-  strokeWidth = 2,
-  ...props
-}: SVGProps<SVGSVGElement>) {
+export function EyeIcon({ strokeWidth = 2, ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 28 28"

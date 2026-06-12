@@ -1,9 +1,6 @@
 import { SVGProps } from "react";
 
-export function UserIcon({
-  strokeWidth = 1.5,
-  ...props
-}: SVGProps<SVGSVGElement>) {
+export function UserIcon({ strokeWidth = 1.5, ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 20 20"
