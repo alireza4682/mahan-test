@@ -1,26 +1,13 @@
-import {
-  ClockIcon,
-  EyeIcon,
-  UserIcon,
-  HomeIcon,
-  SearchIcon,
-  UserSquareIcon,
-  WarningIcon,
-} from "@/components/icons";
-import { InputField } from "@/components/ui/input";
+import Link from "next/link";
+
+import { buttonVariants } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-zinc-50 dark:bg-black">
-      سلام من یکان هستم
-      <UserIcon width={40} className="text-tag" />
-      <EyeIcon width={40} className="text-tag" />
-      <ClockIcon width={40} className="text-tag" />
-      <HomeIcon width={40} className="text-tag" />
-      <SearchIcon width={40} className="text-tag" />
-      <UserSquareIcon width={40} className="text-tag" />
-      <WarningIcon width={40} className="text-destructive" />
-      <InputField label="جستجو" icon={<SearchIcon />} placeholder="جستجو..." />
-    </div>
+    <main className="flex min-h-screen w-full items-center justify-center bg-zinc-50 dark:bg-black">
+      <Link href="/blog" className={buttonVariants({ size: "lg" })}>
+        مشاهده مجله
+      </Link>
+    </main>
   );
 }

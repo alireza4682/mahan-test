@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 
 import type { CreateBlogInput } from "@/features/blogs/types";
-
-const CREATE_BLOG_ENDPOINT = "https://test.bajetala.com/blog/blog/";
+import { apiEndpoints, createApiUrl } from "@/lib/api";
 
 export async function POST(request: Request) {
   const body = (await request.json()) as CreateBlogInput;
-  const response = await fetch(CREATE_BLOG_ENDPOINT, {
+  const response = await fetch(createApiUrl(apiEndpoints.createBlog), {
     method: "POST",
     headers: {
       Accept: "application/json",

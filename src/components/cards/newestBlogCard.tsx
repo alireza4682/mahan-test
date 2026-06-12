@@ -58,25 +58,31 @@ export default function NewestBlogCard({
           </div>
         )}
 
-        <div className="flex min-w-0 flex-1 flex-col gap-2 text-start md:gap-4 md:pe-3">
-          <div className="rounded-md bg-muted px-3 py-2 text-center text-[12px] text-muted-foreground md:text-sm">
+        <div className="flex min-w-0 flex-1 flex-col gap-2 text-start md:gap-3 md:pe-3 lg:gap-4">
+          <div className="rounded-md bg-subtle-border px-3 py-2 text-center text-[12px] font-medium text-muted-foreground md:text-sm">
             {label}
           </div>
 
-          <h2 className="line-clamp-3 text-[13px] leading-7 font-medium md:line-clamp-2 md:text-lg md:leading-8">
+          <h2
+            className="blog-card-title min-w-0 text-[13px] leading-7 font-medium md:text-base md:leading-7 lg:text-lg lg:leading-8"
+            title={title}
+          >
             {title}
           </h2>
 
           {description && (
-            <p className="line-clamp-4 hidden leading-7 text-muted-foreground md:block md:text-base">
+            <p
+              className="blog-card-description min-w-0 leading-6 text-muted-foreground md:text-sm lg:text-base lg:leading-7"
+              title={description}
+            >
               {description}
             </p>
           )}
 
           {author && (
-            <div className="mt-auto flex min-h-[19.85px] items-center gap-2 text-muted-foreground md:min-h-12">
+            <div className="mt-auto flex min-h-[19.85px] items-center gap-2 text-muted-foreground md:min-h-9 lg:min-h-12">
               <UserIcon
-                className="size-[19.85px] shrink-0 text-secondary md:size-12"
+                className="size-[19.85px] shrink-0 text-secondary md:size-9 lg:size-12"
                 strokeWidth={1}
               />
               <span className="text-xs leading-5 md:text-sm md:leading-6">{author}</span>

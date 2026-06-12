@@ -1,9 +1,9 @@
+import { apiEndpoints, createApiUrl } from "@/lib/api";
+
 import type { BlogCategoryWithCount } from "../types";
 
-const BLOG_CATEGORIES_ENDPOINT = "https://test.bajetala.com/blog/blog-categories/";
-
 export async function getBlogCategories(signal?: AbortSignal): Promise<BlogCategoryWithCount[]> {
-  const response = await fetch(BLOG_CATEGORIES_ENDPOINT, {
+  const response = await fetch(createApiUrl(apiEndpoints.blogCategories), {
     cache: "no-store",
     headers: {
       Accept: "application/json",

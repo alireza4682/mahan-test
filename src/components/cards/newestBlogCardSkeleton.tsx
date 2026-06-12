@@ -9,7 +9,7 @@ export default function NewestBlogCardSkeleton() {
     >
       <Skeleton className="h-28.25 w-42.5 shrink-0 rounded-lg md:h-75 md:w-[46%]" />
 
-      <div className="flex min-w-0 flex-1 flex-col gap-2 md:gap-4 md:pe-3">
+      <div className="flex min-w-0 flex-1 flex-col gap-2 md:gap-3 md:pe-3 lg:gap-4">
         <Skeleton className="h-9 w-full rounded-md" />
         <div className="space-y-2">
           <Skeleton className="h-5 w-full md:h-6" />

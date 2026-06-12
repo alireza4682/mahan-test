@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { UserSquareIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -31,6 +32,8 @@ import type { BlogCategoryWithCount } from "../types";
 type AddBlogDialogProps = {
   categories: BlogCategoryWithCount[];
 };
+
+const MAX_BLOG_CONTENT_LENGTH = 500;
 
 export type NewBlogValues = {
   title: string;
@@ -96,7 +99,7 @@ export function AddBlogDialog({ categories }: AddBlogDialogProps) {
           نوشتن بلاگ جدید
         </DialogTrigger>
 
-        <DialogContent dir="rtl">
+        <DialogContent dir="rtl" className="max-w-[328px] md:max-w-[720px]">
           <DialogHeader className="mb-6">
             <DialogTitle>اضافه کردن بلاگ جدید</DialogTitle>
           </DialogHeader>
@@ -112,14 +115,28 @@ export function AddBlogDialog({ categories }: AddBlogDialogProps) {
             <form.Field
               name="title"
               validators={{
-                onSubmit: ({ value }) => (value.trim() ? undefined : "عنوان بلاگ را وارد کنید."),
+                onSubmit: ({ value }) => {
+                  const title = value.trim();
+
+                  if (!title) {
+                    return "عنوان بلاگ را وارد کنید.";
+                  }
+
+                  if (/[سفق]/u.test(title)) {
+                    return "عنوان بلاگ نمی‌تواند شامل حروف س، ف یا ق باشد.";
+                  }
+
+                  return undefined;
+                },
               }}
             >
               {(field) => (
                 <InputField
                   id={field.name}
                   name={field.name}
+                  type="text"
                   label="عنوان بلاگ"
+                  icon={<UserSquareIcon />}
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(event) => field.handleChange(event.target.value)}
@@ -136,56 +153,80 @@ export function AddBlogDialog({ categories }: AddBlogDialogProps) {
                 onSubmit: ({ value }) => (value ? undefined : "یک دسته‌بندی انتخاب کنید."),
               }}
             >
-              {(field) => (
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="new-blog-category" className="text-lg text-foreground">
-                    دسته‌بندی
-                  </label>
-                  <Select
-                    value={field.state.value || null}
-                    onValueChange={(value) => {
-                      field.handleChange(value ?? "");
-                      field.handleBlur();
-                    }}
-                  >
-                    <SelectTrigger
-                      id="new-blog-category"
-                      onBlur={field.handleBlur}
-                      aria-invalid={field.state.meta.errors.length > 0}
-                      className="w-full px-3 text-base data-[size=default]:h-13"
+              {(field) => {
+                const selectedCategory = categories.find(
+                  (category) => String(category.id) === field.state.value,
+                );
+
+                return (
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="new-blog-category" className="text-lg text-foreground">
+                      دسته‌بندی
+                    </label>
+                    <Select
+                      value={field.state.value || null}
+                      onValueChange={(value) => {
+                        field.handleChange(value ?? "");
+                        field.handleBlur();
+                      }}
                     >
-                      <SelectValue placeholder="مثال: آموزشی" />
-                    </SelectTrigger>
-                    <SelectContent
-                      align="start"
-                      alignItemWithTrigger={false}
-                      sideOffset={8}
-                      className="rounded-xl border border-muted p-2 text-base shadow-lg"
-                    >
-                      {categories.map((category) => (
-                        <SelectItem
-                          key={category.id}
-                          value={String(category.id)}
-                          className="min-h-11 rounded-lg px-3 pe-10 text-base"
-                        >
-                          {category.title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {field.state.meta.errors[0] ? (
-                    <p role="alert" className="text-sm text-destructive">
-                      {field.state.meta.errors[0]}
-                    </p>
-                  ) : null}
-                </div>
-              )}
+                      <SelectTrigger
+                        id="new-blog-category"
+                        onBlur={field.handleBlur}
+                        aria-invalid={field.state.meta.errors.length > 0}
+                        className="w-full px-3 text-base data-[size=default]:h-13"
+                      >
+                        <SelectValue placeholder="مثال: آموزشی">
+                          {selectedCategory?.title}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent
+                        align="start"
+                        alignItemWithTrigger={false}
+                        sideOffset={8}
+                        className="rounded-xl border border-muted p-2 text-base shadow-lg"
+                      >
+                        {categories.map((category) => (
+                          <SelectItem
+                            key={category.id}
+                            value={String(category.id)}
+                            className="min-h-11 rounded-lg px-3 pe-10 text-base"
+                          >
+                            {category.title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {field.state.meta.errors[0] ? (
+                      <p role="alert" className="text-sm text-destructive">
+                        {field.state.meta.errors[0]}
+                      </p>
+                    ) : null}
+                  </div>
+                );
+              }}
             </form.Field>
 
             <form.Field
               name="content"
               validators={{
-                onSubmit: ({ value }) => (value.trim() ? undefined : "بدنه بلاگ را وارد کنید."),
+                onSubmit: ({ value }) => {
+                  const content = value.trim();
+
+                  if (!content) {
+                    return "بدنه بلاگ را وارد کنید.";
+                  }
+
+                  if (content.length > MAX_BLOG_CONTENT_LENGTH) {
+                    return `بدنه بلاگ نمی‌تواند بیشتر از ${MAX_BLOG_CONTENT_LENGTH} نویسه باشد.`;
+                  }
+
+                  if (/[سف]/u.test(content)) {
+                    return "بدنه بلاگ نمی‌تواند شامل حروف س یا ف باشد.";
+                  }
+
+                  return undefined;
+                },
               }}
             >
               {(field) => (
@@ -200,9 +241,13 @@ export function AddBlogDialog({ categories }: AddBlogDialogProps) {
                     onBlur={field.handleBlur}
                     onChange={(event) => field.handleChange(event.target.value)}
                     placeholder="متن بدنه بلاگ خود را بنویسید"
+                    maxLength={MAX_BLOG_CONTENT_LENGTH}
                     aria-invalid={field.state.meta.errors.length > 0}
                     className="min-h-40 text-base sm:min-h-44"
                   />
+                  <span className="text-end text-xs text-muted-foreground">
+                    {field.state.value.length} / {MAX_BLOG_CONTENT_LENGTH}
+                  </span>
                   {field.state.meta.errors[0] ? (
                     <p role="alert" className="text-sm text-destructive">
                       {field.state.meta.errors[0]}
@@ -239,7 +284,7 @@ export function AddBlogDialog({ categories }: AddBlogDialogProps) {
 
             {createBlogMutation.isError ? (
               <p role="alert" className="text-center text-sm text-destructive">
-                ثبت بلاگ با خطا مواجه شد. دوباره تلاش کنید.
+                {createBlogMutation.error.message}
               </p>
             ) : null}
           </form>

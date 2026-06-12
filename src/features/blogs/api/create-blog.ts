@@ -1,5 +1,24 @@
 import type { CreateBlogInput } from "../types";
 
+type ApiValidationErrors = Record<string, string[] | string>;
+
+function getErrorMessage(body: string, status: number) {
+  if (!body) {
+    return `ثبت بلاگ با خطا مواجه شد (${status}).`;
+  }
+
+  try {
+    const errors = JSON.parse(body) as ApiValidationErrors;
+    const messages = Object.values(errors).flatMap((error) =>
+      Array.isArray(error) ? error : [error],
+    );
+
+    return messages.join(" ");
+  } catch {
+    return body;
+  }
+}
+
 export async function createBlog(input: CreateBlogInput): Promise<void> {
   const response = await fetch("/api/blogs", {
     method: "POST",
@@ -11,9 +30,7 @@ export async function createBlog(input: CreateBlogInput): Promise<void> {
   });
 
   if (!response.ok) {
-    const message = await response.text();
-
-    throw new Error(message || `Failed to create blog (${response.status})`);
+    throw new Error(getErrorMessage(await response.text(), response.status));
   }
 
   await response.text();
