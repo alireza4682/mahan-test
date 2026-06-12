@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import Yekan from "@/fonts/yekan";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,11 +15,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fa">
+    <html lang="fa" dir="rtl">
       <body
         className={`${Yekan.variable} ${Yekan.className} antialiased flex flex-col items-center relative`}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -31,7 +31,7 @@
   --color-error: var(--error);
   --color-warning: var(--warning);
   --color-success: var(--success);
-  --color-icon: var(--icon);
+  --color-tag: var(--tag);
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -64,10 +64,11 @@
   --error: var(--destructive);
   --warning: oklch(0.6918 0.1414 90.68);
   --success: oklch(0.5276 0.1436 150.41);
-  --border: oklch(0.88 0.014 255);
+  --border: oklch(0.8921 0.0069 277.15);
   --input: oklch(0.9 0.014 255);
+  --placeholder: oklch(0.6706 0.0151 272.6);
   --ring: oklch(0.62 0.12 205);
-  --icon: oklch(0.5586 0.2391 279.04);
+  --tag: oklch(0.5586 0.2391 279.04);
   --radius: 0.625rem;
 }
 
@@ -95,8 +96,9 @@
   --success: oklch(0.7 0.13 155);
   --border: oklch(0.31 0.027 250);
   --input: oklch(0.27 0.027 250);
+  --placeholder: oklch(0.6706 0.0151 272.6);
   --ring: oklch(0.72 0.13 198);
-  --icon: oklch(0.76 0.12 218);
+  --tag: oklch(0.76 0.12 218);
 }
 
 @layer base {
