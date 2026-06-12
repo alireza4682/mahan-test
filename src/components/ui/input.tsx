@@ -5,6 +5,8 @@ import { Input as InputPrimitive } from "@base-ui/react/input";
 
 import { cn } from "@/lib/utils";
 
+import { FieldError } from "./field-error";
+
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
     <InputPrimitive
@@ -68,11 +70,7 @@ function InputField({
         />
       </div>
 
-      {error ? (
-        <p id={errorId} role="alert" className="text-sm text-destructive">
-          {error}
-        </p>
-      ) : null}
+      {error ? <FieldError id={errorId}>{error}</FieldError> : null}
     </div>
   );
 }

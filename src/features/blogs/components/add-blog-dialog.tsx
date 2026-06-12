@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { FieldError } from "@/components/ui/field-error";
 import { InputField } from "@/components/ui/input";
 import {
   Select,
@@ -25,7 +26,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-import { createBlog } from "../api/create-blog";
+import { createBlog, CreateBlogError } from "../api/create-blog";
 import { blogKeys } from "../queries";
 import type { BlogCategoryWithCount } from "../types";
 
@@ -40,6 +41,10 @@ export type NewBlogValues = {
   categoryId: string;
   content: string;
 };
+
+function firstError(error: string[] | string | undefined) {
+  return Array.isArray(error) ? error[0] : error;
+}
 
 export function AddBlogDialog({ categories }: AddBlogDialogProps) {
   const [open, setOpen] = useState(false);
@@ -67,8 +72,26 @@ export function AddBlogDialog({ categories }: AddBlogDialogProps) {
         });
         setOpen(false);
         form.reset();
-      } catch {
-        // The mutation state renders the submission error in the dialog.
+      } catch (error) {
+        if (error instanceof CreateBlogError) {
+          const fieldErrors = {
+            title: firstError(error.fieldErrors.title),
+            categoryId: firstError(error.fieldErrors.category),
+            content: firstError(error.fieldErrors.content),
+          };
+
+          for (const [fieldName, message] of Object.entries(fieldErrors)) {
+            if (message) {
+              form.setFieldMeta(fieldName as keyof NewBlogValues, (meta) => ({
+                ...meta,
+                errorMap: {
+                  ...meta.errorMap,
+                  onSubmit: message,
+                },
+              }));
+            }
+          }
+        }
       }
     },
   });
@@ -131,19 +154,33 @@ export function AddBlogDialog({ categories }: AddBlogDialogProps) {
               }}
             >
               {(field) => (
-                <InputField
-                  id={field.name}
-                  name={field.name}
-                  type="text"
-                  label="عنوان بلاگ"
-                  icon={<UserSquareIcon />}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(event) => field.handleChange(event.target.value)}
-                  placeholder="مثال: راهنمای کامل خرید و سرمایه‌گذاری در..."
-                  error={field.state.meta.errors[0]}
-                  className="h-13 text-base"
-                />
+                <div className="flex flex-col gap-1">
+                  <InputField
+                    id={field.name}
+                    name={field.name}
+                    type="text"
+                    label="عنوان بلاگ"
+                    icon={<UserSquareIcon />}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(event) => {
+                      form.setFieldMeta(field.name, (meta) => ({
+                        ...meta,
+                        errorMap: { ...meta.errorMap, onSubmit: undefined },
+                      }));
+                      field.handleChange(event.target.value);
+                    }}
+                    placeholder="مثال: راهنمای کامل خرید و سرمایه‌گذاری در..."
+                    aria-invalid={field.state.meta.errors.length > 0}
+                    aria-describedby={
+                      field.state.meta.errors.length > 0 ? `${field.name}-error` : undefined
+                    }
+                    className="h-13 text-base"
+                  />
+                  {field.state.meta.errors[0] ? (
+                    <FieldError id={`${field.name}-error`}>{field.state.meta.errors[0]}</FieldError>
+                  ) : null}
+                </div>
               )}
             </form.Field>
 
@@ -166,6 +203,10 @@ export function AddBlogDialog({ categories }: AddBlogDialogProps) {
                     <Select
                       value={field.state.value || null}
                       onValueChange={(value) => {
+                        form.setFieldMeta(field.name, (meta) => ({
+                          ...meta,
+                          errorMap: { ...meta.errorMap, onSubmit: undefined },
+                        }));
                         field.handleChange(value ?? "");
                         field.handleBlur();
                       }}
@@ -198,9 +239,7 @@ export function AddBlogDialog({ categories }: AddBlogDialogProps) {
                       </SelectContent>
                     </Select>
                     {field.state.meta.errors[0] ? (
-                      <p role="alert" className="text-sm text-destructive">
-                        {field.state.meta.errors[0]}
-                      </p>
+                      <FieldError>{field.state.meta.errors[0]}</FieldError>
                     ) : null}
                   </div>
                 );
@@ -239,7 +278,13 @@ export function AddBlogDialog({ categories }: AddBlogDialogProps) {
                     name={field.name}
                     value={field.state.value}
                     onBlur={field.handleBlur}
-                    onChange={(event) => field.handleChange(event.target.value)}
+                    onChange={(event) => {
+                      form.setFieldMeta(field.name, (meta) => ({
+                        ...meta,
+                        errorMap: { ...meta.errorMap, onSubmit: undefined },
+                      }));
+                      field.handleChange(event.target.value);
+                    }}
                     placeholder="متن بدنه بلاگ خود را بنویسید"
                     maxLength={MAX_BLOG_CONTENT_LENGTH}
                     aria-invalid={field.state.meta.errors.length > 0}
@@ -249,9 +294,7 @@ export function AddBlogDialog({ categories }: AddBlogDialogProps) {
                     {field.state.value.length} / {MAX_BLOG_CONTENT_LENGTH}
                   </span>
                   {field.state.meta.errors[0] ? (
-                    <p role="alert" className="text-sm text-destructive">
-                      {field.state.meta.errors[0]}
-                    </p>
+                    <FieldError>{field.state.meta.errors[0]}</FieldError>
                   ) : null}
                 </div>
               )}
@@ -282,10 +325,10 @@ export function AddBlogDialog({ categories }: AddBlogDialogProps) {
               </DialogClose>
             </DialogFooter>
 
-            {createBlogMutation.isError ? (
-              <p role="alert" className="text-center text-sm text-destructive">
-                {createBlogMutation.error.message}
-              </p>
+            {createBlogMutation.isError &&
+            (!(createBlogMutation.error instanceof CreateBlogError) ||
+              Object.keys(createBlogMutation.error.fieldErrors).length === 0) ? (
+              <FieldError className="justify-center">{createBlogMutation.error.message}</FieldError>
             ) : null}
           </form>
         </DialogContent>

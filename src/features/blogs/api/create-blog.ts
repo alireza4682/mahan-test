@@ -2,9 +2,19 @@ import type { CreateBlogInput } from "../types";
 
 type ApiValidationErrors = Record<string, string[] | string>;
 
-function getErrorMessage(body: string, status: number) {
+export class CreateBlogError extends Error {
+  constructor(
+    message: string,
+    readonly fieldErrors: ApiValidationErrors = {},
+  ) {
+    super(message);
+    this.name = "CreateBlogError";
+  }
+}
+
+function parseError(body: string, status: number) {
   if (!body) {
-    return `ثبت بلاگ با خطا مواجه شد (${status}).`;
+    return new CreateBlogError(`ثبت بلاگ با خطا مواجه شد (${status}).`);
   }
 
   try {
@@ -13,9 +23,9 @@ function getErrorMessage(body: string, status: number) {
       Array.isArray(error) ? error : [error],
     );
 
-    return messages.join(" ");
+    return new CreateBlogError(messages.join(" "), errors);
   } catch {
-    return body;
+    return new CreateBlogError(body);
   }
 }
 
@@ -30,7 +40,7 @@ export async function createBlog(input: CreateBlogInput): Promise<void> {
   });
 
   if (!response.ok) {
-    throw new Error(getErrorMessage(await response.text(), response.status));
+    throw parseError(await response.text(), response.status);
   }
 
   await response.text();
